@@ -7,7 +7,7 @@
 <!--        <feature>ssl-1.0</feature>-->
 <!--        <feature>mpConfig-3.0</feature>-->
 <!--        <feature>passwordUtilities-1.0</feature>-->
-<!--        <feature>beanValidation-3.0</feature>-->
+        <feature>beanValidation-3.0</feature>
 <!--        <feature>restfulWS-3.0</feature>-->
 <!--        <feature>jsonb-2.0</feature>-->
 <!--        <feature>mpOpenAPI-3.0</feature>-->
