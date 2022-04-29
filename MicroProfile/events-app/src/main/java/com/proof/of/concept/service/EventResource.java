@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 
 @Path("/event")
-public class EventService {
+public class EventResource {
 
     @Inject
     EventRepository eventRepository;
