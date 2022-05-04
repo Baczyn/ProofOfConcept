@@ -44,8 +44,6 @@ public class MongoProducer {
                 dbName,
                 pass.toCharArray()
         );
-
-
 //        SSLContext sslContext = JSSEHelper.getInstance().getSSLContext(
 //                "outboundSSLContext",
 //                Collections.emptyMap(),
@@ -63,13 +61,11 @@ public class MongoProducer {
     }
 
     @Produces
-    public MongoDatabase createDB(
-            MongoClient client) {
+    public MongoDatabase createDB(MongoClient client) {
         return client.getDatabase(dbName);
     }
 
-    public void close(
-            @Disposes MongoClient toClose) {
+    public void close(@Disposes MongoClient toClose) {
         toClose.close();
     }
 }

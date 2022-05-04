@@ -19,11 +19,8 @@ public class EventValidator {
 
     public JsonArray getViolations(Event event) {
         Set<ConstraintViolation<Event>> violations = validator.validate(event);
-
         JsonArrayBuilder messages = Json.createArrayBuilder();
-
         violations.forEach(v -> messages.add(v.getMessage()));
-
         return messages.build();
     }
 }

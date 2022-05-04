@@ -13,16 +13,16 @@ public class Location {
     private String city;
     private String streetName;
     private String streetNumber;
-    private String name;
+    private String facilityName;
 
     @JsonbTransient
-    public Document getLocationDoc(){
+    public Document getLocationDoc() {
         Document doc = new Document();
-        doc.put("country",country);
-        doc.put("city",city);
-        doc.put("streetName",streetName);
-        doc.put("streetNumber",streetNumber);
-        doc.put("name",name);
+        doc.put("country", country);
+        doc.put("city", city);
+        doc.put("streetName", streetName);
+        doc.put("streetNumber", streetNumber);
+        doc.put("facilityName", facilityName);
         return doc;
     }
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<title> Event Page </title>
+<body>
+<h2>Event Form</h2>
+<h:form id="event_form">
+    <p>
+        Title
+        <h:inputText id="title" value="#{eventBean.title}" required="true"/>
+    </p>
+    <p>
+        Description
+        <h:inputText id="description" value="#{eventBean.description}" required="true"/>
+    </p>
+    <p>
+        Date
+        <h:inputText id="date" value="#{eventBean.date}" required="true"/>
+    </p>
+    <p>
+        Country
+        <h:inputText id="country" value="#{eventBean.country}" required="true"/>
+    </p>
+    <p>
+        City
+        <h:inputText id="city" value="#{eventBean.city}" required="true"/>
+    </p>
+    <p>
+        Street
+        <h:inputText id="street" value="#{eventBean.streetName}" required="true"/>
+    </p>
+    <p>
+        Street Number
+        <h:inputText id="street_number" value="#{eventBean.streetNumber}" required="true"/>
+    </p>
+    <p>
+        Facility Name
+        <h:inputText id="Facility_name" value="#{eventBean.facilityName}" required="false"/>
+    </p>
+    <p>
+        <h:commandButton value="Add" type="submit"
+                         action="#{eventBean.doAddEvent()}">
+        </h:commandButton>
+        <br /> <br /> <input
+            type="reset" value="Reset" />
+    </p>
+</h:form>
+<script type="text/javascript">
+    // Force safari to refresh the page
+    // if a cached copy was loaded
+    // from the browser back-forward cache.
+    window.onpageshow = function(e) {
+      if (e.persisted) {
+        window.location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -3,35 +3,25 @@
 
     <!-- Enable features -->
     <featureManager>
-<!--        <feature>cdi-3.0</feature>-->
-<!--        <feature>ssl-1.0</feature>-->
-<!--        <feature>mpConfig-3.0</feature>-->
-<!--        <feature>passwordUtilities-1.0</feature>-->
         <feature>beanValidation-3.0</feature>
-<!--        <feature>restfulWS-3.0</feature>-->
-<!--        <feature>jsonb-2.0</feature>-->
-<!--        <feature>mpOpenAPI-3.0</feature>-->
-        <feature>microProfile-5.0</feature>
+        <feature>restfulWS-3.0</feature>
+        <feature>jsonb-2.0</feature>
+        <feature>jsonp-2.0</feature>
+        <feature>cdi-3.0</feature>
+        <feature>mpConfig-3.0</feature>
+        <feature>mpRestClient-3.0</feature>
+        <feature>appSecurity-4.0</feature>
+        <feature>servlet-5.0</feature>
+        <feature>mpJwt-2.0</feature>
+        <feature>persistence-3.0</feature>
+        <feature>mpOpenAPI-3.0</feature>
     </featureManager>
 
-    <!-- This template enables security. To get the full use of all the capabilities, a keystore and user registry are required. -->
+    <basicRegistry id="basic" realm="BasicRealm"/>
 
-    <!-- For the keystore, default keys are generated and stored in a keystore. To provide the keystore password, generate an 
-        encoded password using bin/securityUtility encode and add it below in the password attribute of the keyStore element. 
-        Then uncomment the keyStore element. -->
-    <!--
-    <keyStore password=""/> 
-    -->
-
-    <!--For a user registry configuration, configure your user registry. For example, configure a basic user registry using the
-        basicRegistry element. Specify your own user name below in the name attribute of the user element. For the password,
-        generate an encoded password using bin/securityUtility encode and add it in the password attribute of the user element.
-        Then uncomment the user element. -->
-    <basicRegistry id="basic" realm="BasicRealm">
-        <!--
-        <user name="yourUserName" password="" />
-        -->
-    </basicRegistry>
+    <!-- Accept token built with jwtFrontEndBuilder by jwtIssuer -->
+    <mpJwt id="jwtFrontEndBuilder" issuer="jwtIssuer"
+           jwksUri="http://localhost:9082/jwt/ibm/api/jwtFrontEndBuilder/jwk"/>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint id="defaultHttpEndpoint"
@@ -42,19 +32,6 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="/events-app" location="events-app.war" />
+    <webApplication contextRoot="/" location="events-app.war" />
 
-    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-<!--    <keyStore-->
-<!--            id="outboundTrustStore"-->
-<!--            location="${server.output.dir}/resources/security/truststore.p12"-->
-<!--            password="mongodb"-->
-<!--            type="PKCS12"-->
-<!--    />-->
-<!--    <ssl-->
-<!--            id="outboundSSLContext"-->
-<!--            keyStoreRef="defaultKeyStore"-->
-<!--            trustStoreRef="outboundTrustStore"-->
-<!--            sslProtocol="TLS"-->
-<!--    />-->
 </server>

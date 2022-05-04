@@ -18,11 +18,10 @@ public class Event implements Serializable {
     @NotEmpty(message = "All events must have a title!")
     private String title;
 
-    @NotNull(message = "All events must have a artist!")
-    private Artist artist;
-
     @NotNull(message = "All events must have a location!")
     private Location location;
+
+    private String description;
 
     @NotNull(message = "All events must have a date in format: yyyy-MM-dd'T'HH:mm:ss!")
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss")
@@ -34,11 +33,10 @@ public class Event implements Serializable {
     public Document getEventDoc() {
         Document doc = new Document();
         doc.put("title", title);
-        doc.put("artist", artist.getArtistDoc());
         doc.put("location", location.getLocationDoc());
+        doc.put("description", description);
         doc.put("date", date.toString());
 //        doc.put("images",images);
         return doc;
     }
-
 }

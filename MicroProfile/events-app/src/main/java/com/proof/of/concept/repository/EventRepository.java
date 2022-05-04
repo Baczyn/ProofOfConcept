@@ -14,11 +14,9 @@ import java.util.List;
 
 @ApplicationScoped
 public class EventRepository {
-
+    private final static String COLLECTION_NAME = "Events";
     @Inject
     private MongoDatabase db;
-
-    private final static String COLLECTION_NAME = "Events";
 
     public String add(Event event) {
 
@@ -34,6 +32,9 @@ public class EventRepository {
         MongoCollection<Document> eventCollection = db.getCollection(COLLECTION_NAME);
         FindIterable<Document> docs = eventCollection.find();
         for (Document doc : docs) {
+            String stringId = doc.get("_id").toString();
+            doc.remove("_id");
+            doc.append("id", stringId);
             events.add(doc.toJson());
         }
         return "[" + String.join(",", events) + "]";
@@ -44,7 +45,11 @@ public class EventRepository {
         MongoCollection<Document> eventCollection = db.getCollection(COLLECTION_NAME);
         Document query = new Document("_id", new ObjectId(id));
         Document doc = eventCollection.find(query).first();
+
         if (doc != null) {
+            String stringId = doc.get("_id").toString();
+            doc.remove("_id");
+            doc.append("id", stringId);
             return doc.toJson();
         }
         return null;
