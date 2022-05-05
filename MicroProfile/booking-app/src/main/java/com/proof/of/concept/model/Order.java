@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "OrderTable")
 @NamedQuery(name = "Order.findAll", query = "SELECT e FROM Order e")
+@NamedQuery(name = "Order.findByUserId", query = "SELECT e FROM Order e WHERE e.userId = :userId")
 public class Order implements Serializable {
 
     @Id
@@ -28,7 +29,6 @@ public class Order implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Event event;
-
 
     private Integer ticketQuantity;
 

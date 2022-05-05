@@ -3,6 +3,7 @@ package com.proof.of.concept.rest;
 import com.proof.of.concept.model.Event;
 import com.proof.of.concept.model.EventRequest;
 import com.proof.of.concept.repository.EventRepository;
+import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -50,6 +51,47 @@ public class EventResource {
                 .build();
     }
 
+    @GET
+    @Path("{id}")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Successfully got the event."),
+            @APIResponse(
+                    responseCode = "404",
+                    description = "Event Not found."),
+            @APIResponse(
+                    responseCode = "500",
+                    description = "Failed to get the event.")})
+    @Operation(summary = "Get the event by id from the database.")
+    @PermitAll
+    public Response getById(@PathParam("id") String eventId ) {
+        Event event;
+        try {
+            event = eventRepository.findById(eventId);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+        if(event == null){
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .build();
+        }
+        else{
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(event)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+    }
+
+
     @POST
     @APIResponses({
             @APIResponse(
@@ -78,7 +120,7 @@ public class EventResource {
                     responseCode = "400",
                     description = "Event object id was not found.") })
     @Operation(summary = "Delete the event from the database.")
-    public Response delete(@PathParam("id") Integer eventId){
+    public Response delete(@PathParam("id") String eventId){
         Event event = eventRepository.delete(eventId);
         return Response
                 .status(event==null?Response.Status.NOT_FOUND:Response.Status.OK)
@@ -96,6 +138,7 @@ public class EventResource {
                     responseCode = "400",
                     description = "Event object id was not found.") })
     @Operation(summary = "Update the event in the database.")
+    @PermitAll
     public Response update(EventRequest eventRequest){
         Event updatedEvent = eventRepository.update(new Event(eventRequest));
         return Response

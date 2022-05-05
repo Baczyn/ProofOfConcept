@@ -17,16 +17,13 @@ import java.sql.Timestamp;
 public class Event implements Serializable {
 
     @Id
-    private Integer eventId;
+    private String eventId;
 
     private Integer numberOfTickets;
-
-    private Timestamp startingDateOfBooking;
 
     public Event(EventRequest eventRequest){
         this.eventId = eventRequest.getEventId();
         this.numberOfTickets = eventRequest.getNumberOfTickets();
-        this.startingDateOfBooking = Timestamp.valueOf(eventRequest.getStartingDateOfBooking());
     }
 
 }

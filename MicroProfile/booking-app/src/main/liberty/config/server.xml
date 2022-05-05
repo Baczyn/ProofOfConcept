@@ -17,7 +17,7 @@
   <variable name="default.http.port" defaultValue="8080"/>
   <variable name="default.https.port" defaultValue="8443"/>
 
-  <mpJwt id="jwtFrontEndBuilder" issuer="mb"
+  <mpJwt id="jwtFrontEndBuilder" issuer="jwtIssuer"
          jwksUri="http://localhost:9082/jwt/ibm/api/jwtFrontEndBuilder/jwk"/>
 
   <keyStore id="defaultKeyStore" password="secret"/>

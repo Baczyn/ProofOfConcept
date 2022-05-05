@@ -4,6 +4,7 @@ import com.proof.of.concept.exceptions.NumberOfTicketException;
 import com.proof.of.concept.model.Order;
 import com.proof.of.concept.model.OrderRequest;
 import com.proof.of.concept.repository.OrderRepository;
+import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,8 +37,35 @@ public class OrderResource {
     @Operation(summary = "List the orders from the database.")
     public Response getAll() {
         List<Order> orderList;
-        try{
+        try {
             orderList = orderRepository.getAll();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+        return Response
+                .status(Response.Status.OK)
+                .entity(orderList)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    @GET
+    @Path("{userId}")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Successfully listed user's orders."),
+            @APIResponse(
+                    responseCode = "500",
+                    description = "Failed to list user's orders.")})
+    @Operation(summary = "List user's orders from the database.")
+    public Response getByUserId(@PathParam("userId") Integer userId) {
+        List<Order> orderList;
+        try {
+            orderList = orderRepository.findByUserId(userId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Response
@@ -101,8 +129,19 @@ public class OrderResource {
                     responseCode = "400",
                     description = "Order object id was not found.")})
     @Operation(summary = "Delete the order from the database.")
-    public Response delete(@PathParam("id") Integer eventId) {
-        Order order = orderRepository.delete(eventId);
+    @PermitAll
+    public Response delete(@PathParam("id") Integer orderId) {
+        Order order;
+        try {
+            order = orderRepository.delete(orderId);
+        } catch (NumberOfTicketException e) {
+            System.out.println(e.getMessage());
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
         return Response
                 .status(order == null ? Response.Status.NOT_FOUND : Response.Status.OK)
                 .entity(order)

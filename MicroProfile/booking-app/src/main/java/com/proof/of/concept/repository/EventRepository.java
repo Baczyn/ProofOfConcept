@@ -21,7 +21,7 @@ public class EventRepository {
         return event;
     }
 
-    public Event delete(Integer eventId) {
+    public Event delete(String eventId) {
         Event event = findById(eventId);
         if (event != null) {
             entityManager.remove(event);
@@ -47,7 +47,7 @@ public class EventRepository {
         return entityManager.createNamedQuery("Event.findAll", Event.class).getResultList();
     }
 
-    public Event findById(Integer eventId) {
+    public Event findById(String eventId) {
         return entityManager.find(Event.class, eventId);
     }
 

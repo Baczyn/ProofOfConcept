@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns="http://www.w3.org/1999/xhtml"
+>
+<h:head>
+    <title> Event Page </title>
+</h:head>
+<h:body>
+    <h1>Event Details</h1>
+    <h:dataTable value="#{eventBean.doGetById(param['id'])}" var="event">
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{event.title}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Date</f:facet>
+            #{event.date}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Description</f:facet>
+            #{event.description}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Location</f:facet>
+            #{event.location.country},
+            #{event.location.city},
+            #{event.location.streetName}
+            #{event.location.streetNumber},
+            #{event.location.facilityName}
+        </h:column>
+    </h:dataTable>
+
+
+
+    <h:dataTable rendered="#{role eq 'admin'}" value="#{bookingBean.doGetNoOfTickets(param['id'])}" var="eventBooking">
+        <h:column>
+            <h:form id="ticket-form">
+                <h:outputLabel for="noOfTicket">Available Tickets:</h:outputLabel>
+                <h:inputText id="noOfTicket" value="#{eventBooking.numberOfTickets}" required="true"
+                             requiredMessage="No. of tickets is required"/><br/>
+                <h:inputHidden id="eventId" value="#{eventBooking.eventId}"/><br/>
+                <h:commandButton id="submit-button" value="Submit" action="#{bookingBean.doUpdateNoOfTickets(eventBooking.eventId,eventBooking.numberOfTickets)}"/>
+            </h:form>
+        </h:column>
+    </h:dataTable>
+
+    <h:form rendered="#{not empty role}">
+        <p>
+            <h:commandButton value="Comment" type="submit"
+                             action="#{applicationBean.doView(events.id)}">
+            </h:commandButton>
+        </p>
+    </h:form>
+    <h:form rendered="#{not empty role}">
+        <p>
+            <h:commandButton value="Like it" type="submit"
+                             action="#{applicationBean.doView(events.id)}">
+            </h:commandButton>
+        </p>
+    </h:form>
+    <p>Book event:</p>
+    <h:form rendered="#{not empty role}">
+        <input type="hidden" name="eventId" value="#{param.id}" />
+        <p>
+            Number Of Tickets
+            <input type="number" name="ticketQuantity" required = "true" value="1" />
+        </p>
+        <p>
+            <h:commandButton value="Book" type="submit"
+                             action="#{bookingBean.doCreateOrder(param['eventId'], param['ticketQuantity'])}">
+            </h:commandButton>
+        </p>
+    </h:form>
+
+
+    <h1>Comments</h1>
+
+
+    <script type="text/javascript">
+        // Force safari to refresh the page
+        // if a cached copy was loaded
+        // from the browser back-forward cache.
+        window.onpageshow = function (e) {
+            if (e.persisted) {
+                window.location.reload();
+            }
+        }
+    </script>
+</h:body>
+</html>

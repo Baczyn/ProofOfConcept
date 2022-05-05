@@ -21,7 +21,6 @@ public class OrderRepository {
     @Inject
     private EventRepository eventRepository;
 
-
     public Order create(Order order) throws NumberOfTicketException {
         Event event = entityManager.getReference(Event.class, order.getEvent().getEventId());
         event = eventRepository.updateNumberOfTickets(event, order.getTicketQuantity());
@@ -30,12 +29,13 @@ public class OrderRepository {
         return order;
     }
 
-    public Order delete(int orderId){
-        Order address =  entityManager.find(Order.class,orderId);
-        if(address != null){
-            entityManager.remove(address);
+    public Order delete(int orderId) throws NumberOfTicketException {
+        Order order =  entityManager.find(Order.class,orderId);
+        if(order != null){
+            eventRepository.updateNumberOfTickets(order.getEvent(), -order.getTicketQuantity());
+            entityManager.remove(order);
         }
-        return address;
+        return order;
     }
 
     public Order update(Order order){
@@ -44,5 +44,9 @@ public class OrderRepository {
 
     public List<Order> getAll(){
         return  entityManager.createNamedQuery("Order.findAll",Order.class).getResultList();
+    }
+
+    public List<Order> findByUserId(Integer userId){
+        return  entityManager.createNamedQuery("Order.findByUserId",Order.class).setParameter("userId",userId).getResultList();
     }
 }
