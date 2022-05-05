@@ -1,5 +1,6 @@
 package com.proof.of.concept.frontend.client;
 
+import com.proof.of.concept.frontend.models.booking.BookingEvent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,5 +17,8 @@ public interface BookingEventClient extends AutoCloseable {
     @GET
     @Path("{id}")
     Response getById(@HeaderParam("Authorization") String authHeader, @PathParam("id") String id);
+
+    @PUT
+    Response update(@HeaderParam("Authorization") String authHeader, BookingEvent request);
 
 }

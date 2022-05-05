@@ -26,7 +26,14 @@ public class LoginBean {
         //map role and user
         //TODO - check user in DB
         Set<String> roles = new HashSet<>();
-        roles.add("admin");
+
+        if(username.equals("bob")){
+            roles.add("admin");
+        }
+        else{
+            roles.add("user");
+        }
+//        roles.add("admin");
 
         try {
             request.logout();
@@ -38,7 +45,7 @@ public class LoginBean {
                 System.out.println("Session timed out. ");
             } else {
                 ses.setAttribute("jwt", jwt);
-                ses.setAttribute("role", "admin");
+                ses.setAttribute("role", roles.iterator().next());
             }
 
         } catch (Exception e) {

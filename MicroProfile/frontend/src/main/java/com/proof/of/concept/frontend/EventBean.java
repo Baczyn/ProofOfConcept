@@ -37,13 +37,19 @@ public class EventBean {
             eventClient.add(jwt, eventRequest);
         } else {
             eventClient.update(jwt, eventRequest, id);
+            id = null;
         }
-
         return "index.jsf";
     }
 
     public EventResponse doGetById(String id) throws Exception {
-        return eventClient.getById(id).readEntity(EventResponse.class);
+        try {
+            return eventClient.getById(id).readEntity(EventResponse.class);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return new EventResponse();
     }
 
     public String doEditEvent(String eventId) throws Exception {

@@ -1,6 +1,6 @@
 package com.proof.of.concept.frontend;
 
-import com.proof.of.concept.frontend.client.BookingClient;
+import com.proof.of.concept.frontend.client.BookingEventClient;
 import com.proof.of.concept.frontend.client.EventClient;
 import com.proof.of.concept.frontend.models.event.EventResponse;
 import com.proof.of.concept.frontend.util.SessionUtils;
@@ -18,10 +18,6 @@ import java.util.List;
 @ApplicationScoped
 @Named
 public class ApplicationBean {
-
-    @Inject
-    @RestClient
-    private BookingClient bookingClient;
 
     @Inject
     @RestClient

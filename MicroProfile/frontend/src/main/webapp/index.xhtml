@@ -1,98 +1,69 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+>
 
 <body>
-    <h1>Welcome to The Band webpage</h1>
-    <p>In that page you can check our past and feature events. You can book tickets to upcoming gigs and share your opinion by commenting/liking events.</p>
-    <p><a href="/login.jsf" >Log in</a> to try out the application.</p>
-    <div>
-        <h2>Events</h2>
-        <h:form>
-        <h:outputLink value = "eventForm.jsf"  rendered="#{role eq 'admin'}">Add Event</h:outputLink>
-        </h:form>
-        <h:dataTable value = "#{applicationBean.all}" var = "events">
-            <h:column>
-                <f:facet name = "header">Title</f:facet>
-                #{events.title}
-            </h:column>
-            <h:column>
-                <f:facet name = "header">Date</f:facet>
-                #{events.date}
-            </h:column>
-<!--            <h:column>-->
-<!--                <f:facet name = "header">Description</f:facet>-->
-<!--                #{events.description}-->
-<!--            </h:column>-->
-            <h:column>
-                <f:facet name = "header">Location</f:facet>
-                #{events.location.country},
-                #{events.location.city},
-                #{events.location.streetName}
-                #{events.location.streetNumber},
-                #{events.location.facilityName}
-            </h:column>
-            <h:column>
-                <h:form>
+<h1>Welcome to The Band webpage</h1>
+<p>In that page you can check our past and feature events. You can book tickets to upcoming gigs and share your opinion by commenting/liking events.</p>
+<p><a href="/login.jsf">Log in</a> to try out the application.</p>
+<div>
+    <h2>Events</h2>
+    <h:form>
+        <h:outputLink value="eventForm.jsf" rendered="#{role eq 'admin'}">Add Event</h:outputLink>
+    </h:form>
+    <h:form>
+        <h:outputLink value="orderDetails.jsf" rendered="#{not empty role}">Your Reservations</h:outputLink>
+    </h:form>
+    <h:dataTable value="#{applicationBean.all}" var="events">
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{events.title}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Date</f:facet>
+            #{events.date}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Location</f:facet>
+            #{events.location.country},
+            #{events.location.city},
+            #{events.location.streetName}
+            #{events.location.streetNumber},
+            #{events.location.facilityName}
+        </h:column>
+        <h:column>
+            <h:form>
                 <p><h:commandButton value="View" type="submit"
-                                     action="#{applicationBean.doView(events.id)}">
-                    </h:commandButton>
+                                    action="#{applicationBean.doView(events.id)}">
+                </h:commandButton>
                 </p>
-                </h:form>
-            </h:column>
-            <h:column rendered="#{role eq 'admin'}">
-                <h:form>
-                    <h:commandButton value="Edit"  onclick="location.href = 'eventForm.jsf';" type="submit"
-                                     action="#{eventBean.doEditEvent(events.id)}">
-                    </h:commandButton>
-                </h:form>
-            </h:column>
-            <h:column>
-                <h:form>
-                    <p><h:commandButton  rendered="#{role eq 'admin'}" value="Delete" type="submit"
-                                        action="#{applicationBean.doRemoveEvent(events.id)}">
-                    </h:commandButton>
-                    </p>
-                </h:form>
-            </h:column>
-
-
-
-        </h:dataTable>
-
-        <h:panelGroup rendered="#{not empty role}" id="logoutButton" layout="block">
-            <FORM METHOD="POST" ACTION="ibm_security_logout" NAME="logout">
-                <input type="submit" name="logout" value="Log Out" />
-                <input type="HIDDEN" name="logoutExitPage" value="/index.jsf" />
-            </FORM>
-            <p> Siema #{role}</p>
-        </h:panelGroup>
-
-
-
-
-        <!--        <p>-->
-<!--            The <a href="https://microprofile.io/" target="_blank" rel="noopener noreferrer">Eclipse MicroProfile project</a> is an open community with the aim of optimizing enterprise Java for a microservices architecture.-->
-<!--            MicroProfile evolves with guidance from the community.-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            If you want to share your thoughts, you can post straight to the-->
-<!--            <a href="https://groups.google.com/forum/#!forum/microprofile" target="_blank" rel="noopener noreferrer">MicroProfile Google group</a>.-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            For more information about the features used in this application, see the Open Liberty documentation:-->
-<!--            <ul>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#microProfile-3.3.html" target="_blank" rel="noopener noreferrer">MicroProfile 3.3</a></li>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#mpOpenTracing-1.3.html" target="_blank" rel="noopener noreferrer">MicroProfile OpenTracing 1.3</a></li>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#cdi-2.0.html" target="_blank" rel="noopener noreferrer">Contexts and Dependency Injection 2.0</a></li>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#jaxrs-2.1.html" target="_blank" rel="noopener noreferrer">Java RESTful Services 2.1</a></li>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#jsonp-1.1.html" target="_blank" rel="noopener noreferrer">JavaScript Object Notation Processing 1.1</a></li>-->
-<!--                <li><a href="https://openliberty.io/docs/ref/feature/#jsonb-2.0.html" target="_blank" rel="noopener noreferrer">JavaScript Object Notation Binding 2.0</a></li>-->
-<!--            </ul>-->
-<!--        </p>-->
-    </div>
+            </h:form>
+        </h:column>
+        <h:column rendered="#{role eq 'admin'}">
+            <h:form>
+                <h:commandButton value="Edit" onclick="location.href = 'eventForm.jsf';" type="submit"
+                                 action="#{eventBean.doEditEvent(events.id)}">
+                </h:commandButton>
+            </h:form>
+        </h:column>
+        <h:column>
+            <h:form>
+                <p>
+                    <h:commandButton rendered="#{role eq 'admin'}" value="Delete" type="submit"
+                                    action="#{applicationBean.doRemoveEvent(events.id)}">
+                </h:commandButton>
+                </p>
+            </h:form>
+        </h:column>
+    </h:dataTable>
+    <h:panelGroup rendered="#{not empty role}" id="logoutButton" layout="block">
+        <FORM METHOD="POST" ACTION="ibm_security_logout" NAME="logout">
+            <input type="submit" name="logout" value="Log Out"/>
+            <input type="HIDDEN" name="logoutExitPage" value="/index.jsf"/>
+        </FORM>
+        <p> Siema #{role}</p>
+    </h:panelGroup>
+</div>
 </body>
 </html>
