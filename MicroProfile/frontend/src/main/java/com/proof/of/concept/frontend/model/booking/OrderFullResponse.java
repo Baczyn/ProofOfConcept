@@ -1,6 +1,6 @@
-package com.proof.of.concept.frontend.models.booking;
+package com.proof.of.concept.frontend.model.booking;
 
-import com.proof.of.concept.frontend.models.event.EventResponse;
+import com.proof.of.concept.frontend.model.event.EventResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +13,14 @@ import java.sql.Timestamp;
 public class OrderFullResponse {
 
     private Integer id;
-    private Integer userId;
+    private String userName;
     private EventResponse event;
     private Integer ticketQuantity;
     private Timestamp orderedAt;
 
     public OrderFullResponse(OrderResponse orderResponse, EventResponse eventResponse) {
-        id=orderResponse.getId();
-        userId = orderResponse.getUserId();
+        id = orderResponse.getId();
+        userName = orderResponse.getUserName();
         ticketQuantity = orderResponse.getTicketQuantity();
         orderedAt = orderResponse.getOrderedAt();
         event = eventResponse;

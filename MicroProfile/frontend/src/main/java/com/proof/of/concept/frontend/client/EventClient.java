@@ -1,7 +1,6 @@
 package com.proof.of.concept.frontend.client;
 
-import com.proof.of.concept.frontend.models.event.EventRequest;
-import com.proof.of.concept.frontend.models.event.EventResponse;
+import com.proof.of.concept.frontend.model.event.EventRequest;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

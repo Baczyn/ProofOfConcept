@@ -1,17 +1,16 @@
-package com.proof.of.concept.frontend.models.event;
+package com.proof.of.concept.frontend.model.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
-public class EventResponse {
+@AllArgsConstructor
+public class EventRequest {
 
-    private String id;
     private String title;
     private Location location;
     private String description;
-    private LocalDateTime date;
+    private String date;
 }

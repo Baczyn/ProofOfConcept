@@ -1,6 +1,6 @@
 package com.proof.of.concept.frontend.client;
 
-import com.proof.of.concept.frontend.models.booking.BookingEvent;
+import com.proof.of.concept.frontend.model.booking.BookingEvent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

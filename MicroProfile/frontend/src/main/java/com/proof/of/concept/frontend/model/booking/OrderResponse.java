@@ -1,4 +1,4 @@
-package com.proof.of.concept.frontend.models.booking;
+package com.proof.of.concept.frontend.model.booking;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class OrderResponse {
 
     private Integer id;
-    private Integer userId;
+    private String userName;
     private BookingEvent event;
     private Integer ticketQuantity;
     private Timestamp orderedAt;

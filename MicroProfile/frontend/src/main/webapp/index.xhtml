@@ -6,7 +6,17 @@
 <body>
 <h1>Welcome to The Band webpage</h1>
 <p>In that page you can check our past and feature events. You can book tickets to upcoming gigs and share your opinion by commenting/liking events.</p>
-<p><a href="/login.jsf">Log in</a> to try out the application.</p>
+<h:panelGroup rendered="#{empty user}" layout="block">
+    <p><a href="login.jsf">Log in</a> if you already have an account.</p>
+    <p><a href="register.jsf">Register</a> to try out the application.</p>
+</h:panelGroup>
+<h:panelGroup rendered="#{not empty user}" layout="block">
+    <p> Hello #{user} ! </p>
+    <FORM METHOD="POST" ACTION="ibm_security_logout" NAME="logout">
+        <input type="submit" name="logout" value="Log Out"/>
+        <input type="HIDDEN" name="logoutExitPage" value="/index.jsf"/>
+    </FORM>
+</h:panelGroup>
 <div>
     <h2>Events</h2>
     <h:form>
@@ -51,19 +61,12 @@
             <h:form>
                 <p>
                     <h:commandButton rendered="#{role eq 'admin'}" value="Delete" type="submit"
-                                    action="#{applicationBean.doRemoveEvent(events.id)}">
-                </h:commandButton>
+                                     action="#{applicationBean.doRemoveEvent(events.id)}">
+                    </h:commandButton>
                 </p>
             </h:form>
         </h:column>
     </h:dataTable>
-    <h:panelGroup rendered="#{not empty role}" id="logoutButton" layout="block">
-        <FORM METHOD="POST" ACTION="ibm_security_logout" NAME="logout">
-            <input type="submit" name="logout" value="Log Out"/>
-            <input type="HIDDEN" name="logoutExitPage" value="/index.jsf"/>
-        </FORM>
-        <p> Siema #{role}</p>
-    </h:panelGroup>
 </div>
 </body>
 </html>

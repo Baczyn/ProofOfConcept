@@ -1,8 +1,7 @@
 package com.proof.of.concept.frontend;
 
-import com.proof.of.concept.frontend.client.BookingEventClient;
 import com.proof.of.concept.frontend.client.EventClient;
-import com.proof.of.concept.frontend.models.event.EventResponse;
+import com.proof.of.concept.frontend.model.event.EventResponse;
 import com.proof.of.concept.frontend.util.SessionUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

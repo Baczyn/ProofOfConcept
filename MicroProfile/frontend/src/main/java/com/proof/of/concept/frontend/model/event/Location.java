@@ -1,4 +1,4 @@
-package com.proof.of.concept.frontend.models.event;
+package com.proof.of.concept.frontend.model.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

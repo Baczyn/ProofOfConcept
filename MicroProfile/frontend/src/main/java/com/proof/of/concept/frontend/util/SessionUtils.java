@@ -21,4 +21,8 @@ public class SessionUtils {
     public static String getJwtToken() {
         return "Bearer " + getSession().getAttribute("jwt");
     }
+
+    public static String getCurrentUserName() {
+        return getSession().getAttribute("user").toString();
+    }
 }

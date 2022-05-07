@@ -1,4 +1,4 @@
-package com.proof.of.concept.frontend.models.booking;
+package com.proof.of.concept.frontend.model.booking;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,7 @@ public class OrderRequest {
 
     private String eventId;
     private Integer ticketQuantity;
+    private String userName;
     private String deliveryMethod;
     private String paymentMethod;
 }

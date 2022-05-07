@@ -2,8 +2,8 @@ package com.proof.of.concept.frontend;
 
 import com.ibm.websphere.security.jwt.Claims;
 import com.ibm.websphere.security.jwt.JwtBuilder;
-import com.proof.of.concept.frontend.security.model.role.Role;
-import com.proof.of.concept.frontend.security.model.user.User;
+import com.proof.of.concept.frontend.security.model.Role;
+import com.proof.of.concept.frontend.security.model.User;
 import com.proof.of.concept.frontend.security.service.SecurityService;
 import com.proof.of.concept.frontend.util.SessionUtils;
 import jakarta.enterprise.context.ApplicationScoped;

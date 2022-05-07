@@ -1,6 +1,6 @@
 package com.proof.of.concept.frontend.client;
 
-import com.proof.of.concept.frontend.models.booking.OrderRequest;
+import com.proof.of.concept.frontend.model.booking.OrderRequest;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,8 +18,8 @@ public interface BookingOrderClient extends AutoCloseable {
     Response create(@HeaderParam("Authorization") String authHeader, OrderRequest orderRequest);
 
     @GET
-    @Path("{userId}")
-    Response getByUserId(@HeaderParam("Authorization") String authHeader, @PathParam("userId") Integer userId);
+    @Path("{userName}")
+    Response getByUserId(@HeaderParam("Authorization") String authHeader, @PathParam("userName") String userName);
 
     @DELETE
     @Path("{id}")

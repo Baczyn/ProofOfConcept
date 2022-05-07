@@ -1,10 +1,8 @@
-package com.proof.of.concept.frontend.models.booking;
+package com.proof.of.concept.frontend.model.booking;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
