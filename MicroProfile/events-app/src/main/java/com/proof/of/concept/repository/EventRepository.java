@@ -14,7 +14,9 @@ import java.util.List;
 
 @ApplicationScoped
 public class EventRepository {
+
     private final static String COLLECTION_NAME = "Events";
+
     @Inject
     private MongoDatabase db;
 

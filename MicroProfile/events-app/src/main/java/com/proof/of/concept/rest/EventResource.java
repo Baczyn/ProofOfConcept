@@ -35,7 +35,7 @@ public class EventResource {
                     responseCode = "400",
                     description = "Invalid event configuration.")})
     @Operation(summary = "Add a new event to the database.")
-    @RolesAllowed({"admin"})
+    @RolesAllowed({"ADMIN"})
     public Response add(Event event) {
 
         JsonArray violations = validator.getViolations(event);
@@ -139,7 +139,7 @@ public class EventResource {
                     responseCode = "404",
                     description = "Event object id was not found.")})
     @Operation(summary = "Update the event in the database.")
-    @RolesAllowed("admin")
+    @RolesAllowed({"ADMIN"})
     public Response update(Event event,
                            @Parameter(
                                    description = "Object id of the event to update.",
@@ -194,7 +194,7 @@ public class EventResource {
                     responseCode = "404",
                     description = "Event object id was not found.")})
     @Operation(summary = "Delete the event from the database.")
-    @RolesAllowed("admin")
+    @RolesAllowed({"ADMIN"})
     public Response remove(
             @Parameter(
                     description = "Object id of the event to delete.",
