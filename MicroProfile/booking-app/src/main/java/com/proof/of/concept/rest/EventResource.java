@@ -4,6 +4,7 @@ import com.proof.of.concept.model.Event;
 import com.proof.of.concept.model.EventRequest;
 import com.proof.of.concept.repository.EventRepository;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -33,12 +34,12 @@ public class EventResource {
                     responseCode = "500",
                     description = "Failed to list the events.")})
     @Operation(summary = "List the events from the database.")
+    @RolesAllowed({"ADMIN"})
     public Response getAll() {
         List<Event> eventList;
-        try{
+        try {
             eventList = eventRepository.getAll();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -65,23 +66,21 @@ public class EventResource {
                     description = "Failed to get the event.")})
     @Operation(summary = "Get the event by id from the database.")
     @PermitAll
-    public Response getById(@PathParam("id") String eventId ) {
+    public Response getById(@PathParam("id") String eventId) {
         Event event;
         try {
             event = eventRepository.findById(eventId);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .build();
         }
-        if(event == null){
+        if (event == null) {
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .build();
-        }
-        else{
+        } else {
             return Response
                     .status(Response.Status.OK)
                     .entity(event)
@@ -90,7 +89,6 @@ public class EventResource {
         }
 
     }
-
 
     @POST
     @APIResponses({
@@ -101,6 +99,7 @@ public class EventResource {
                     responseCode = "400",
                     description = "Invalid event configuration.")})
     @Operation(summary = "Add a new event to the database.")
+    @RolesAllowed({"ADMIN"})
     public Response create(EventRequest eventRequest) {
         Event newEvent = eventRepository.create(new Event(eventRequest));
         return Response
@@ -118,12 +117,13 @@ public class EventResource {
                     description = "Successfully deleted event."),
             @APIResponse(
                     responseCode = "400",
-                    description = "Event object id was not found.") })
+                    description = "Event object id was not found.")})
     @Operation(summary = "Delete the event from the database.")
-    public Response delete(@PathParam("id") String eventId){
+    @RolesAllowed({"ADMIN"})
+    public Response delete(@PathParam("id") String eventId) {
         Event event = eventRepository.delete(eventId);
         return Response
-                .status(event==null?Response.Status.NOT_FOUND:Response.Status.OK)
+                .status(event == null ? Response.Status.NOT_FOUND : Response.Status.OK)
                 .entity(event)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
@@ -136,13 +136,13 @@ public class EventResource {
                     description = "Successfully updated event."),
             @APIResponse(
                     responseCode = "400",
-                    description = "Event object id was not found.") })
+                    description = "Event object id was not found.")})
     @Operation(summary = "Update the event in the database.")
-    @PermitAll
-    public Response update(EventRequest eventRequest){
+    @RolesAllowed({"ADMIN"})
+    public Response update(EventRequest eventRequest) {
         Event updatedEvent = eventRepository.update(new Event(eventRequest));
         return Response
-                .status(updatedEvent==null?Response.Status.NOT_FOUND:Response.Status.OK)
+                .status(updatedEvent == null ? Response.Status.NOT_FOUND : Response.Status.OK)
                 .entity(updatedEvent)
                 .type(MediaType.APPLICATION_JSON)
                 .build();

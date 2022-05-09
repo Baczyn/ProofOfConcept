@@ -30,23 +30,23 @@ public class OrderRepository {
     }
 
     public Order delete(int orderId) throws NumberOfTicketException {
-        Order order =  entityManager.find(Order.class,orderId);
-        if(order != null){
+        Order order = entityManager.find(Order.class, orderId);
+        if (order != null) {
             eventRepository.updateNumberOfTickets(order.getEvent(), -order.getTicketQuantity());
             entityManager.remove(order);
         }
         return order;
     }
 
-    public Order update(Order order){
-         return entityManager.merge(order);
+    public Order update(Order order) {
+        return entityManager.merge(order);
     }
 
-    public List<Order> getAll(){
-        return  entityManager.createNamedQuery("Order.findAll",Order.class).getResultList();
+    public List<Order> getAll() {
+        return entityManager.createNamedQuery("Order.findAll", Order.class).getResultList();
     }
 
-    public List<Order> findByUserId(Integer userId){
-        return  entityManager.createNamedQuery("Order.findByUserId",Order.class).setParameter("userId",userId).getResultList();
+    public List<Order> findByUserName(String userName) {
+        return entityManager.createNamedQuery("Order.findByUserName", Order.class).setParameter("userName", userName).getResultList();
     }
 }

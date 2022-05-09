@@ -14,9 +14,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <liberty.var.default.hostname>localhost</liberty.var.default.hostname>
-        <liberty.var.default.http.port>8080</liberty.var.default.http.port>
-        <liberty.var.default.https.port>8443</liberty.var.default.https.port>
     </properties>
     
 <!--    <properties>-->

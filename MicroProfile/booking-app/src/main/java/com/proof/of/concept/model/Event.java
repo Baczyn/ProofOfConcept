@@ -1,12 +1,14 @@
 package com.proof.of.concept.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class Event implements Serializable {
 
     private Integer numberOfTickets;
 
-    public Event(EventRequest eventRequest){
+    public Event(EventRequest eventRequest) {
         this.eventId = eventRequest.getEventId();
         this.numberOfTickets = eventRequest.getNumberOfTickets();
     }
