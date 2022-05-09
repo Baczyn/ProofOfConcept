@@ -5,13 +5,21 @@ import com.proof.of.concept.frontend.model.event.EventRequest;
 import com.proof.of.concept.frontend.model.event.EventResponse;
 import com.proof.of.concept.frontend.model.event.Location;
 import com.proof.of.concept.frontend.util.SessionUtils;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonValue;
+import jakarta.json.bind.JsonbBuilder;
 import lombok.Data;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-@ApplicationScoped
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@RequestScoped
 @Named
 @Data
 public class EventBean {
@@ -30,40 +38,63 @@ public class EventBean {
     private String id;
     private String description;
 
-    public String doAddEvent() throws Exception {
-        String jwt = SessionUtils.getJwtToken();
-        EventRequest eventRequest = new EventRequest(title, new Location(country, city, streetName, streetNumber, facilityName),description, date);
-        if (id == null) {
-            eventClient.add(jwt, eventRequest);
-        } else {
-            eventClient.update(jwt, eventRequest, id);
-            id = null;
-        }
-        return "index.jsf";
+    @PostConstruct
+    private void setIdFromParam() {
+        this.id = SessionUtils.getEventIdFormParam();
     }
 
-    public EventResponse doGetById(String id) throws Exception {
-        try {
-            return eventClient.getById(id).readEntity(EventResponse.class);
+    public List<EventResponse> getAll() {
+        JsonArray array = eventClient.getAll().readEntity(JsonArray.class);
+        List<EventResponse> list = new ArrayList<>();
+        for (JsonValue item : array) {
+            list.add(JsonbBuilder.create().fromJson(item.toString(), EventResponse.class));
         }
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        return list;
+    }
+
+    public String doRemoveEvent(String eventId) {
+        eventClient.remove(SessionUtils.getJwtToken(), eventId);
+        return "index.jsf?faces-redirect=true";
+    }
+
+    public String doView(String eventId) {
+        return "eventDetails.jsf?faces-redirect=true&id=" + eventId;
+    }
+
+    public String doAddEvent() throws Exception {
+        String jwt = SessionUtils.getJwtToken();
+        EventRequest eventRequest = new EventRequest(title, new Location(country, city, streetName, streetNumber, facilityName), description, date);
+        if (Objects.equals(this.id, "")) {
+            eventClient.add(jwt, eventRequest);
+        } else {
+            eventClient.update(jwt, eventRequest, this.id);
+        }
+        return "index.jsf?faces-redirect=true";
+    }
+
+    public EventResponse doGetById() throws Exception {
+        if (!this.id.equals("")) {
+            try {
+                return eventClient.getById(id).readEntity(EventResponse.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
         return new EventResponse();
     }
 
-    public String doEditEvent(String eventId) throws Exception {
-        EventResponse eventResponse = eventClient.getById(eventId).readEntity(EventResponse.class);
-        title = eventResponse.getTitle();
-        date = eventResponse.getDate().toString();
-        country = eventResponse.getLocation().getCountry();
-        city = eventResponse.getLocation().getCity();
-        streetName = eventResponse.getLocation().getStreetName();
-        streetNumber = eventResponse.getLocation().getStreetNumber();
-        facilityName = eventResponse.getLocation().getFacilityName();
-        id = eventResponse.getId();
-
-        return "eventForm.jsf?faces-redirect=true";
+    public void fillEventFormById(String eventId) {
+        if (!eventId.equals("")) {
+            EventResponse eventResponse = eventClient.getById(eventId).readEntity(EventResponse.class);
+            title = eventResponse.getTitle();
+            date = eventResponse.getDate().toString();
+            country = eventResponse.getLocation().getCountry();
+            description = eventResponse.getDescription();
+            city = eventResponse.getLocation().getCity();
+            streetName = eventResponse.getLocation().getStreetName();
+            streetNumber = eventResponse.getLocation().getStreetNumber();
+            facilityName = eventResponse.getLocation().getFacilityName();
+            id = eventResponse.getId();
+        }
     }
 }
-

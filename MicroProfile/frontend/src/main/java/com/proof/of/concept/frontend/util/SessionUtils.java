@@ -4,10 +4,11 @@ import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.Optional;
+
 public class SessionUtils {
     // Gets the current session for a logged in user.
     public static HttpSession getSession() {
-
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
                 .getSession(false);
     }
@@ -23,6 +24,10 @@ public class SessionUtils {
     }
 
     public static String getCurrentUserName() {
-        return getSession().getAttribute("user").toString();
+        return Optional.ofNullable(getSession().getAttribute("user")).orElse("").toString();
+    }
+
+    public static String getEventIdFormParam() {
+        return Optional.ofNullable(getRequest().getParameter("id")).orElse("");
     }
 }

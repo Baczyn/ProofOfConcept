@@ -26,9 +26,9 @@ public interface EventClient extends AutoCloseable {
 
     @PUT
     @Path("/{id}")
-    Response update(@HeaderParam("Authorization") String authHeader,EventRequest eventRequest, @PathParam("id") String id);
+    Response update(@HeaderParam("Authorization") String authHeader, EventRequest eventRequest, @PathParam("id") String id);
 
     @DELETE
     @Path("/{id}")
-    Response remove(@HeaderParam("Authorization") String authHeader,@PathParam("id") String id);
+    Response remove(@HeaderParam("Authorization") String authHeader, @PathParam("id") String id);
 }

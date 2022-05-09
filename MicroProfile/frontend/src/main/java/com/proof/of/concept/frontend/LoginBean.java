@@ -28,13 +28,11 @@ public class LoginBean {
     private String username;
     private String password;
 
-
     public String doRegister() throws Exception {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.USER);
         try {
-            User user = securityService.create(new User(username, password, roles));
-            System.out.println("Created user:" + user);
+            securityService.create(new User(username, password, roles));
 
             HttpServletRequest request = SessionUtils.getRequest();
             request.logout();
@@ -63,7 +61,6 @@ public class LoginBean {
         try {
             request.logout();
             User user = securityService.login(new User(username, password, null));
-            System.out.println(user);
 
             String jwt = buildJwt(user.getName(), user.getRoles());
             System.out.println(jwt);

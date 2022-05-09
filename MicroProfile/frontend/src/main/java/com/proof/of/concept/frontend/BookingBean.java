@@ -9,21 +9,34 @@ import com.proof.of.concept.frontend.model.booking.OrderRequest;
 import com.proof.of.concept.frontend.model.booking.OrderResponse;
 import com.proof.of.concept.frontend.model.event.EventResponse;
 import com.proof.of.concept.frontend.util.SessionUtils;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Conversation;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonValue;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.core.Response;
+import lombok.Data;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApplicationScoped
+@ConversationScoped
 @Named
-public class BookingBean {
+@Data
+public class BookingBean implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4771270804699990999L;
+
+    @Inject
+    private Conversation conversation;
 
     @Inject
     @RestClient
@@ -37,58 +50,79 @@ public class BookingBean {
     @RestClient
     private EventClient eventClient;
 
-    public BookingEvent doGetNoOfTickets(String eventId) {
-        String jwt = SessionUtils.getJwtToken();
-        try {
-            Response response = bookingEventClient.getById(jwt, eventId);
-            return response.readEntity(BookingEvent.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    private String eventId;
+    private Integer availableNoOfTickets;
+
+    public void initConversation() {
+        if (!FacesContext.getCurrentInstance().isPostback()
+                && conversation.isTransient()) {
+            conversation.begin();
+            System.out.println("initConversation");
         }
-        return new BookingEvent(eventId, 0);
     }
 
-    public String doUpdateNoOfTickets(String eventId, Integer numberOfTickets) {
-        BookingEvent request = new BookingEvent(eventId, numberOfTickets);
+    @PostConstruct
+    private void setIdFromParam() {
+        this.eventId = SessionUtils.getEventIdFormParam();
+        this.availableNoOfTickets = doGetNoOfTickets();
+    }
+
+    private Integer doGetNoOfTickets() {
         String jwt = SessionUtils.getJwtToken();
+        try {
+            Response response = bookingEventClient.getById(jwt, this.eventId);
+            return response.readEntity(BookingEvent.class).getNumberOfTickets();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public String doUpdateNoOfTickets() {
+        String jwt = SessionUtils.getJwtToken();
+        BookingEvent request = new BookingEvent(this.eventId, this.availableNoOfTickets);
         try {
             bookingEventClient.update(jwt, request);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return "eventDetails.jsf?faces-redirect=true&id=" + eventId;
+        return "eventDetails.jsf?faces-redirect=true&id=" + this.eventId;
     }
 
-    public String doCreateOrder(String eventId, String ticketQuantity) {
+    public String doCreateOrder(String ticketQuantity) {
         String jwt = SessionUtils.getJwtToken();
         String username = SessionUtils.getCurrentUserName();
-        System.out.println("CreateOrder" + eventId);
 
-        OrderRequest orderRequest = new OrderRequest(eventId, Integer.valueOf(ticketQuantity), username, null, null);
-        System.out.println("CreateOrder" + orderRequest + "strinh" + ticketQuantity);
+        OrderRequest orderRequest = new OrderRequest(this.eventId, Integer.valueOf(ticketQuantity), username, null, null);
+
         try {
             bookingOrderClient.create(jwt, orderRequest);
+            availableNoOfTickets -= Integer.parseInt(ticketQuantity);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return "eventDetails.jsf?faces-redirect=true&id=" + eventId;
+        return "eventDetails.jsf?faces-redirect=true&id=" + this.eventId;
     }
 
     public List<OrderFullResponse> doGetOrders() {
         String jwt = SessionUtils.getJwtToken();
         String username = SessionUtils.getCurrentUserName();
-
         List<OrderFullResponse> list = new ArrayList<>();
+
         try {
             JsonArray array = bookingOrderClient.getByUserId(jwt, username).readEntity(JsonArray.class);
             for (JsonValue item : array) {
                 OrderResponse orderResponse = JsonbBuilder.create().fromJson(item.toString(), OrderResponse.class);
-                EventResponse response = eventClient.getById(orderResponse.getEvent().getEventId()).readEntity(EventResponse.class);
-                list.add(new OrderFullResponse(orderResponse, response));
+                try {
+                    EventResponse response = eventClient.getById(orderResponse.getEvent().getEventId()).readEntity(EventResponse.class);
+                    list.add(new OrderFullResponse(orderResponse, response));
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
             }
             return list;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

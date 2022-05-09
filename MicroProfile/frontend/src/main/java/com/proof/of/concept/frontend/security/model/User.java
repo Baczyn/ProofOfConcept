@@ -27,6 +27,14 @@ public class User {
 
     private Set<Role> roles;
 
+    static public User fromJson(String userJson) {
+        return JsonbBuilder.create(new JsonbConfig().withAdapters(new UserAdapter())).fromJson(userJson, User.class);
+    }
+
+    public static UserBuilder builder() {
+        return new UserBuilder();
+    }
+
     @JsonbTransient
     public Document getUserDoc() {
         Document doc = new Document();
@@ -35,34 +43,6 @@ public class User {
         doc.put("roles", roles.stream().map(Enum::name).collect(Collectors.joining()));
         return doc;
     }
-
-    static public User fromJson(String userJson){
-        JsonbConfig config = new JsonbConfig().withAdapters(new UserAdapter());
-        return  JsonbBuilder.create(config).fromJson(userJson, User.class);
-    }
-
-    public void updatePassword(String password, Pbkdf2PasswordHash passwordHash) {
-        this.password = passwordHash.generate(password.toCharArray());
-    }
-
-    public static UserBuilder builder() {
-        return new UserBuilder();
-    }
-
-    public void addRoles(Set<Role> roles) {
-        if (this.roles == null) {
-            this.roles = new HashSet<>();
-        }
-        this.roles.addAll(roles);
-    }
-
-    public void removeRoles(Set<Role> roles) {
-        if (this.roles == null) {
-            this.roles = new HashSet<>();
-        }
-        this.roles.removeAll(roles);
-    }
-
 
     public static class UserBuilder {
 
@@ -119,7 +99,7 @@ public class User {
         @Override
         public User adaptFromJson(JsonObject adapted) throws Exception {
             User user = new User();
-            Set<Role> roles= new HashSet<>();
+            Set<Role> roles = new HashSet<>();
             user.setName(adapted.getString("name"));
             user.setPassword(adapted.getString("password"));
             roles.add(Role.valueOf(adapted.getString("roles")));
@@ -127,6 +107,4 @@ public class User {
             return user;
         }
     }
-
 }
-

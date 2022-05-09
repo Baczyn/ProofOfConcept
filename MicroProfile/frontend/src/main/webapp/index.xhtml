@@ -4,6 +4,8 @@
 >
 
 <body>
+<f:event listener="#{reviewBean.endConversation()}"
+         type="preRenderView"></f:event>
 <h1>Welcome to The Band webpage</h1>
 <p>In that page you can check our past and feature events. You can book tickets to upcoming gigs and share your opinion by commenting/liking events.</p>
 <h:panelGroup rendered="#{empty user}" layout="block">
@@ -25,43 +27,39 @@
     <h:form>
         <h:outputLink value="orderDetails.jsf" rendered="#{not empty role}">Your Reservations</h:outputLink>
     </h:form>
-    <h:dataTable value="#{applicationBean.all}" var="events">
+    <h:dataTable value="#{eventBean.getAll()}" var="event">
         <h:column>
             <f:facet name="header">Title</f:facet>
-            #{events.title}
+            #{event.title}
         </h:column>
         <h:column>
             <f:facet name="header">Date</f:facet>
-            #{events.date}
+            #{event.date}
         </h:column>
         <h:column>
             <f:facet name="header">Location</f:facet>
-            #{events.location.country},
-            #{events.location.city},
-            #{events.location.streetName}
-            #{events.location.streetNumber},
-            #{events.location.facilityName}
+            #{event.location.country},
+            #{event.location.city},
+            #{event.location.streetName}
+            #{event.location.streetNumber},
+            #{event.location.facilityName}
         </h:column>
         <h:column>
             <h:form>
                 <p><h:commandButton value="View" type="submit"
-                                    action="#{applicationBean.doView(events.id)}">
+                                    action="#{eventBean.doView(event.id)}">
                 </h:commandButton>
                 </p>
             </h:form>
         </h:column>
         <h:column rendered="#{role eq 'admin'}">
-            <h:form>
-                <h:commandButton value="Edit" onclick="location.href = 'eventForm.jsf';" type="submit"
-                                 action="#{eventBean.doEditEvent(events.id)}">
-                </h:commandButton>
-            </h:form>
+                <h:outputLink value="eventForm.jsf?id=#{event.id}">Edit</h:outputLink>
         </h:column>
         <h:column>
             <h:form>
                 <p>
                     <h:commandButton rendered="#{role eq 'admin'}" value="Delete" type="submit"
-                                     action="#{applicationBean.doRemoveEvent(events.id)}">
+                                     action="#{eventBean.doRemoveEvent(event.id)}">
                     </h:commandButton>
                 </p>
             </h:form>

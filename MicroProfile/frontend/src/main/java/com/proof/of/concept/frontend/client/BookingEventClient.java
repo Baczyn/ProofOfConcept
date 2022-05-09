@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(baseUri = "http://localhost:8080/booking-app")
+@RegisterRestClient(baseUri = "http://localhost:9081/booking-app")
 @Path("/event")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,5 +20,4 @@ public interface BookingEventClient extends AutoCloseable {
 
     @PUT
     Response update(@HeaderParam("Authorization") String authHeader, BookingEvent request);
-
 }

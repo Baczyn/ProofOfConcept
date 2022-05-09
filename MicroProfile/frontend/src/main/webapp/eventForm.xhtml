@@ -1,15 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <title> Event Page </title>
+<f:event listener="#{eventBean.fillEventFormById(param.id)}"
+         type="preRenderView"></f:event>
 <body>
 <h2>Event Form</h2>
 <h:form id="event_form">
+    <p>
+        <h:inputHidden id="id" value="#{eventBean.id}" />
+    </p>
     <p>
         Title
         <h:inputText id="title" value="#{eventBean.title}" required="true"/>
@@ -43,7 +46,7 @@
         <h:inputText id="Facility_name" value="#{eventBean.facilityName}" required="false"/>
     </p>
     <p>
-        <h:commandButton value="Add" type="submit"
+        <h:commandButton value="Add"
                          action="#{eventBean.doAddEvent()}">
         </h:commandButton>
         <br /> <br /> <input

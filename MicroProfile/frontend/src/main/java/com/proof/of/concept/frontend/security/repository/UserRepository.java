@@ -45,7 +45,6 @@ public class UserRepository {
         MongoCollection<Document> mongoCollection = db.getCollection(COLLECTION_NAME);
         Document query = new Document("name", name);
         Document doc = mongoCollection.find(query).first();
-        System.out.println("GetByName "+doc);
         if (doc != null) {
             String stringId = doc.get("_id").toString();
             doc.remove("_id");
@@ -56,7 +55,6 @@ public class UserRepository {
     }
 
     public String getAll() {
-
         List<String> events = new ArrayList<>();
         MongoCollection<Document> eventCollection = db.getCollection(COLLECTION_NAME);
         FindIterable<Document> docs = eventCollection.find();
@@ -69,8 +67,6 @@ public class UserRepository {
         return "[" + String.join(",", events) + "]";
     }
 
-
-
     public String deleteById(String userId) {
         MongoCollection<Document> mongoCollection = db.getCollection(COLLECTION_NAME);
         Document query = new Document("_id", new ObjectId(userId));
@@ -80,17 +76,4 @@ public class UserRepository {
         }
         return null;
     }
-
-//    public String updateById(String id, Event event) {
-//
-//        MongoCollection<Document> eventCollection = db.getCollection(COLLECTION_NAME);
-//        Document query = new Document("_id", new ObjectId(id));
-//        Document doc = eventCollection.findOneAndReplace(query, event.getEventDoc());
-//        if (doc != null) {
-//            return doc.toJson();
-//        }
-//        return null;
-//    }
-//
-
 }

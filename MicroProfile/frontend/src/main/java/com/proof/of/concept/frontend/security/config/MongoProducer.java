@@ -1,7 +1,6 @@
 package com.proof.of.concept.frontend.security.config;
 
 
-import com.ibm.websphere.ssl.JSSEHelper;
 import com.ibm.websphere.ssl.SSLException;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -13,9 +12,6 @@ import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-
-import javax.net.ssl.SSLContext;
-import java.util.Collections;
 
 @ApplicationScoped
 public class MongoProducer {

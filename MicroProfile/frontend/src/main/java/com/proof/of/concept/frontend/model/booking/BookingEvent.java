@@ -12,4 +12,3 @@ public class BookingEvent {
     private String eventId;
     private Integer numberOfTickets;
 }
-

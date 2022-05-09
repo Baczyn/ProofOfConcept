@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(baseUri = "http://localhost:8080/booking-app")
+@RegisterRestClient(baseUri = "http://localhost:9081/booking-app")
 @Path("/order")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
@@ -24,5 +24,4 @@ public interface BookingOrderClient extends AutoCloseable {
     @DELETE
     @Path("{id}")
     Response delete(@HeaderParam("Authorization") String authHeader, @PathParam("id") Integer orderId);
-
 }
