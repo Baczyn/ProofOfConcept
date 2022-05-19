@@ -14,14 +14,13 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "OrderTable")
 @NamedQuery(name = "Order.findAll", query = "SELECT e FROM Order e")
-@NamedQuery(name = "Order.findByUserName", query = "SELECT e FROM Order e WHERE e.userName = :userName")
+@NamedQuery(name = "Order.findByUserName", query = "SELECT e FROM Order e WHERE e.username = :username")
 public class Order implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id = IdGenerator.generateUniqueId();
 
-    private String userName;
+    private String username;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
@@ -36,13 +35,12 @@ public class Order implements Serializable {
     private String paymentMethod;
 
     public Order(OrderRequest orderRequest) {
-        this.userName = orderRequest.getUserName();
+        this.username = orderRequest.getUsername();
         this.ticketQuantity = orderRequest.getTicketQuantity();
         this.orderedAt = new Timestamp(System.currentTimeMillis());
         this.deliveryMethod = orderRequest.getDeliveryMethod();
         this.paymentMethod = orderRequest.getPaymentMethod();
         this.event = new Event();
         this.event.setEventId(orderRequest.getEventId());
-
     }
 }

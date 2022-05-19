@@ -3,7 +3,7 @@ package com.proof.of.concept.repository;
 import com.proof.of.concept.exceptions.NumberOfTicketException;
 import com.proof.of.concept.model.Event;
 import com.proof.of.concept.model.Order;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-@RequestScoped
+@ApplicationScoped
 @Transactional
 public class OrderRepository {
 
@@ -21,7 +21,13 @@ public class OrderRepository {
     @Inject
     private EventRepository eventRepository;
 
+
     public Order create(Order order) throws NumberOfTicketException {
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Event event = entityManager.getReference(Event.class, order.getEvent().getEventId());
         event = eventRepository.updateNumberOfTickets(event, order.getTicketQuantity());
         order.setEvent(event);
@@ -46,7 +52,7 @@ public class OrderRepository {
         return entityManager.createNamedQuery("Order.findAll", Order.class).getResultList();
     }
 
-    public List<Order> findByUserName(String userName) {
-        return entityManager.createNamedQuery("Order.findByUserName", Order.class).setParameter("userName", userName).getResultList();
+    public List<Order> findByUsername(String username) {
+        return entityManager.createNamedQuery("Order.findByUserName", Order.class).setParameter("username", username).getResultList();
     }
 }
