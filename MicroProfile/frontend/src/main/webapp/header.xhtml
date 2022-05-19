@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <link rel="stylesheet" href="style.css"/>
+</h:head>
+<h:body>
+    <div class="topnav">
+        <h1>Welcome to The Band webpage</h1>
+        <p>In that page you can check our past and feature events. You can book tickets to upcoming gigs and share your opinion by commenting/liking events.</p>
+        <a id="events-nav-id"  href="index.jsf">Events</a>
+        <h:panelGroup rendered="#{not empty role}" layout="block">
+            <a id="reserv-nav-id" href="orderDetails.jsf" >Reservations</a>
+        </h:panelGroup>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <h:panelGroup class="split" rendered="#{empty user}" layout="block">
+            <a href="login.jsf" class="split">Log in</a>
+            <a href="register.jsf" class="split">Register</a>
+        </h:panelGroup>
+        <h:panelGroup rendered="#{not empty user}" layout="block">
+            <FORM METHOD="POST" ACTION="ibm_security_logout" NAME="logout">
+                <input id="logout-id" type="submit" name="logout" value="Log Out"/>
+                <input type="HIDDEN" name="logoutExitPage" value="/index.jsf"/>
+            </FORM>
+            <p class="split" > Hello #{user} ! </p>
+        </h:panelGroup>
+    </div>
+
+</h:body>
+</html>

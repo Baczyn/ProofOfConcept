@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topnav a,.topnav input {
+    float: left;
+    color: dimgray;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover, .topnav #logout-id:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Create a right-aligned (split) link inside the navigation bar */
+.topnav a.split, .topnav p.split,  .topnav input.split {
+    float: right;
+}
+
+.topnav h1, .topnav p {
+    color: dimgray;
+    text-align: center;
+    background-color: #333;
+}
+
+#logout-id {
+    float: right;
+    background: none!important;
+    border: none;
+    padding: 14px 16px;
+    color: dimgray;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+}

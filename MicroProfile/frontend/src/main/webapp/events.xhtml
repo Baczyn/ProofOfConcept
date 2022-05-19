@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+<h:head>
+    <link rel="stylesheet" href="table.css"/>
+</h:head>
+<body>
+<f:event listener="#{reviewBean.endConversation()}"
+         type="preRenderView"></f:event>
+
+<div>
+    <h:form class="table">
+        <h:outputLink value="eventForm.jsf" rendered="#{role eq 'admin'}">Add Event</h:outputLink>
+    </h:form>
+    <h:dataTable class="table" value="#{eventBean.getAll()}" var="event">
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{event.title}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Date</f:facet>
+            #{event.date}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Location</f:facet>
+            #{event.location.country},
+            #{event.location.city},
+            #{event.location.streetName}
+            #{event.location.streetNumber},
+            #{event.location.facilityName}
+        </h:column>
+        <h:column>
+            <h:form>
+                <h:commandButton class="button"  value="Details" type="submit" action="#{eventBean.doView(event.id)}"/>
+            </h:form>
+        </h:column>
+        <h:column rendered="#{role eq 'admin'}">
+            <h:outputLink  value="eventForm.jsf?id=#{event.id}">Edit</h:outputLink>
+        </h:column>
+        <h:column rendered="#{role eq 'admin'}">
+            <h:form>
+                    <h:commandButton class="button" value="Delete" type="submit" action="#{eventBean.doRemoveEvent(event.id)}">
+                    </h:commandButton>
+            </h:form>
+        </h:column>
+    </h:dataTable>
+</div>
+</body>
+</html>

@@ -3,10 +3,7 @@ package com.proof.of.concept.frontend;
 import com.proof.of.concept.frontend.client.BookingEventClient;
 import com.proof.of.concept.frontend.client.BookingOrderClient;
 import com.proof.of.concept.frontend.client.EventClient;
-import com.proof.of.concept.frontend.model.booking.BookingEvent;
-import com.proof.of.concept.frontend.model.booking.OrderFullResponse;
-import com.proof.of.concept.frontend.model.booking.OrderRequest;
-import com.proof.of.concept.frontend.model.booking.OrderResponse;
+import com.proof.of.concept.frontend.model.booking.*;
 import com.proof.of.concept.frontend.model.event.EventResponse;
 import com.proof.of.concept.frontend.util.SessionUtils;
 import jakarta.annotation.PostConstruct;
@@ -26,6 +23,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
 @ConversationScoped
 @Named
@@ -101,6 +100,57 @@ public class BookingBean implements Serializable {
             System.out.println(e.getMessage());
         }
         return "eventDetails.jsf?faces-redirect=true&id=" + this.eventId;
+    }
+
+    public String doCreateOrderAsync(String ticketQuantity) {
+        String jwt = SessionUtils.getJwtToken();
+        String username = SessionUtils.getCurrentUserName();
+
+        OrderRequest orderRequest = new OrderRequest(this.eventId, Integer.valueOf(ticketQuantity), username, null, null);
+
+        System.out.println("client 1");
+        final AtomicReference<Response> response = new AtomicReference<>();
+        final AtomicReference<Throwable> throwable = new AtomicReference<>();
+        System.out.println("client 2");
+        BiConsumer<Response, Throwable> consumer = (r, t) -> {
+            if (t != null) {
+                throwable.set(t);
+            } else {
+                System.out.println("client 3");
+                response.set(r);
+            }
+        };
+
+        Throwable t = throwable.get();
+        if (t != null) {
+            System.out.println(t.getMessage());
+        }
+
+        System.out.println("client 4");
+        bookingOrderClient.createAsync(jwt,orderRequest).whenCompleteAsync(consumer);
+        System.out.println("client 5");
+
+        return "eventDetails.jsf?faces-redirect=true&id=" + this.eventId;
+    }
+
+    public List<TaskResponse> doGetTasks(){
+        String jwt = SessionUtils.getJwtToken();
+        String username = SessionUtils.getCurrentUserName();
+
+        JsonArray array = bookingOrderClient.getTasksByUsername(jwt,username).readEntity(JsonArray.class);
+
+        List<TaskResponse> list = new ArrayList<>();
+        for (JsonValue item : array) {
+            TaskResponse taskResponse = JsonbBuilder.create().fromJson(item.toString(), TaskResponse.class);
+            try {
+                EventResponse response = eventClient.getById(taskResponse.getEventId()).readEntity(EventResponse.class);
+                taskResponse.setTitle(response.getTitle());
+                list.add(taskResponse);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return list;
     }
 
     public List<OrderFullResponse> doGetOrders() {

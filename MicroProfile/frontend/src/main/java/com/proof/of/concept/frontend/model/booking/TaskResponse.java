@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequest {
+public class TaskResponse {
 
-    private String eventId;
-    private Integer ticketQuantity;
+    private Integer id;
+    private String taskState;
     private String username;
-    private String deliveryMethod;
-    private String paymentMethod;
+    private String eventId;
+    private String title;
+
 }

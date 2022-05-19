@@ -1,0 +1,25 @@
+
+.eventDetails input[type=text]  {
+    width: 30%;
+    padding: 5px 5px;
+    margin: 1px 0;
+    display: inline-block;
+    border: 1px solid dimgray;
+    box-sizing: border-box;
+    border-radius: 25px;
+}
+
+.eventDetails input[type=submit] {
+    width: auto;
+    background-color: dimgray;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+eventDetails input[type=submit]:hover {
+    background-color: dimgray;
+}

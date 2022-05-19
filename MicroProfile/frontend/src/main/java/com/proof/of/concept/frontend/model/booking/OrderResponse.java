@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class OrderResponse {
 
     private Integer id;
-    private String userName;
+    private String username;
     private BookingEvent event;
     private Integer ticketQuantity;
     private Timestamp orderedAt;
