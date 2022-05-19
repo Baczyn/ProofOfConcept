@@ -2,15 +2,16 @@ package com.proof.of.concept.repository;
 
 import com.proof.of.concept.exceptions.NumberOfTicketException;
 import com.proof.of.concept.model.Event;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-@RequestScoped
+
 @Transactional
+@ApplicationScoped
 public class EventRepository {
 
     @PersistenceContext(name = "jpa-unit")
@@ -50,5 +51,4 @@ public class EventRepository {
     public Event findById(String eventId) {
         return entityManager.find(Event.class, eventId);
     }
-
 }

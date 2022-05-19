@@ -16,7 +16,7 @@ public class OrderRequest {
     private String eventId;
 
     @NotBlank(message = "Order must have a user!")
-    private String userName;
+    private String username;
 
     @Positive(message = "Order must have a ticket quantity!")
     private Integer ticketQuantity;
@@ -24,5 +24,4 @@ public class OrderRequest {
     private String deliveryMethod;
 
     private String paymentMethod;
-
 }

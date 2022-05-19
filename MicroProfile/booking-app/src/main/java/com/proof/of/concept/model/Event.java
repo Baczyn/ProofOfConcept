@@ -27,5 +27,4 @@ public class Event implements Serializable {
         this.eventId = eventRequest.getEventId();
         this.numberOfTickets = eventRequest.getNumberOfTickets();
     }
-
 }

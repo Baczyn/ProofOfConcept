@@ -6,25 +6,20 @@
   xmlns:jsf="http://xmlns.jcp.org/jsf"
   xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <title> Security Login Page </title>
+<h:head>
+  <link rel="stylesheet" href="form.css"/>
+</h:head>
 <body>
-  <h2>Form Login</h2>
+<div class="center">
+  <h2>Login Form</h2>
   <h:form id="loginform">
-    <p>
-      Username
-      <h:inputText id="username" value="#{loginBean.username}" required="true"/>
-    </p>
-    <p>
-      Password
-      <h:inputSecret id="password" value="#{loginBean.password}" required="true"/>
-    </p>
-    <p>
-      <h:commandButton value="Login" type="submit"
-        action="#{loginBean.doLogin()}">
-      </h:commandButton>
-        <br /> <br /> <input
-        type="reset" value="Reset" />
-    </p>
+    <p><h:outputLabel for="username">Username:</h:outputLabel></p>
+    <p><h:inputText id="username" value="#{loginBean.username}" required="true"/></p>
+    <p><h:outputLabel for="password">Password:</h:outputLabel></p>
+    <p><h:inputSecret id="password" value="#{loginBean.password}" required="true"/></p>
+    <h:commandButton value="Login" type="submit" action="#{loginBean.doLogin()}"/>
   </h:form>
+</div>
   <script type="text/javascript">
     // Force safari to refresh the page
     // if a cached copy was loaded

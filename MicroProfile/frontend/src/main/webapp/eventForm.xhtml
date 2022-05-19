@@ -1,67 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+>
 <title> Event Page </title>
+<h:head>
+    <link rel="stylesheet" href="form.css"/>
+</h:head>
 <f:event listener="#{eventBean.fillEventFormById(param.id)}"
          type="preRenderView"></f:event>
 <body>
-<h2>Event Form</h2>
-<h:form id="event_form">
-    <p>
-        <h:inputHidden id="id" value="#{eventBean.id}" />
-    </p>
-    <p>
-        Title
-        <h:inputText id="title" value="#{eventBean.title}" required="true"/>
-    </p>
-    <p>
-        Description
-        <h:inputText id="description" value="#{eventBean.description}" required="true"/>
-    </p>
-    <p>
-        Date
-        <h:inputText id="date" value="#{eventBean.date}" required="true"/>
-    </p>
-    <p>
-        Country
-        <h:inputText id="country" value="#{eventBean.country}" required="true"/>
-    </p>
-    <p>
-        City
-        <h:inputText id="city" value="#{eventBean.city}" required="true"/>
-    </p>
-    <p>
-        Street
-        <h:inputText id="street" value="#{eventBean.streetName}" required="true"/>
-    </p>
-    <p>
-        Street Number
-        <h:inputText id="street_number" value="#{eventBean.streetNumber}" required="true"/>
-    </p>
-    <p>
-        Facility Name
-        <h:inputText id="Facility_name" value="#{eventBean.facilityName}" required="false"/>
-    </p>
-    <p>
-        <h:commandButton value="Add"
-                         action="#{eventBean.doAddEvent()}">
-        </h:commandButton>
-        <br /> <br /> <input
-            type="reset" value="Reset" />
-    </p>
-</h:form>
+<div class="center">
+    <h2>Event Form</h2>
+    <h:form id="event_form">
+        <p><h:inputHidden id="id" value="#{eventBean.id}"/></p>
+
+        <p><h:outputLabel for="username">Title:</h:outputLabel></p>
+        <p><h:inputText id="username" value="#{eventBean.title}" required="true"/></p>
+
+        <p><h:outputLabel for="description">Description:</h:outputLabel></p>
+        <p><h:inputText id="description" value="#{eventBean.description}" required="true"/></p>
+
+        <p><h:outputLabel for="date">Date:</h:outputLabel></p>
+        <p><h:inputText id="date" value="#{eventBean.date}" required="true" a:placeholder="YYYY-MM-DDThh:mm:ss" /></p>
+
+        <p><h:outputLabel for="country">Country:</h:outputLabel></p>
+        <p><h:inputText id="country" value="#{eventBean.country}" required="true"/></p>
+
+        <p><h:outputLabel for="city">City:</h:outputLabel></p>
+        <p><h:inputText id="city" value="#{eventBean.city}" required="true"/></p>
+
+        <p><h:outputLabel for="street">Street:</h:outputLabel></p>
+        <p><h:inputText id="street" value="#{eventBean.streetName}" required="true"/></p>
+
+        <p><h:outputLabel for="street_number">Street Number:</h:outputLabel></p>
+        <p><h:inputText id="street_number" value="#{eventBean.streetNumber}" required="true"/></p>
+
+        <p><h:outputLabel for="facility_name">Facility Name:</h:outputLabel></p>
+        <p><h:inputText id="facility_name" value="#{eventBean.facilityName}" required="false"/></p>
+
+        <h:commandButton value="Add" action="#{eventBean.doAddEvent()}"/>
+    </h:form>
+</div>
 <script type="text/javascript">
     // Force safari to refresh the page
     // if a cached copy was loaded
     // from the browser back-forward cache.
-    window.onpageshow = function(e) {
-      if (e.persisted) {
-        window.location.reload();
-      }
+    window.onpageshow = function (e) {
+        if (e.persisted) {
+            window.location.reload();
+        }
     }
-  </script>
+</script>
 </body>
 </html>

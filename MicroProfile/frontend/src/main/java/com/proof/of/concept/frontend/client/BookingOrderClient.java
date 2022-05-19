@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import java.util.concurrent.CompletionStage;
+
 @RegisterRestClient(baseUri = "http://localhost:9081/booking-app")
 @Path("/order")
 @RequestScoped
@@ -17,9 +19,17 @@ public interface BookingOrderClient extends AutoCloseable {
     @POST
     Response create(@HeaderParam("Authorization") String authHeader, OrderRequest orderRequest);
 
+    @POST
+    @Path("async")
+    CompletionStage<Response> createAsync(@HeaderParam("Authorization") String authHeader, OrderRequest orderRequest);
+
     @GET
-    @Path("{userName}")
-    Response getByUserId(@HeaderParam("Authorization") String authHeader, @PathParam("userName") String userName);
+    @Path("async/{username}")
+    Response getTasksByUsername(@HeaderParam("Authorization") String authHeader, @PathParam("username") String username);
+
+    @GET
+    @Path("{username}")
+    Response getByUserId(@HeaderParam("Authorization") String authHeader, @PathParam("username") String username);
 
     @DELETE
     @Path("{id}")

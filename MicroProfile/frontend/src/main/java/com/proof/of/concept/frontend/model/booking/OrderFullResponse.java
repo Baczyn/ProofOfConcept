@@ -13,14 +13,14 @@ import java.sql.Timestamp;
 public class OrderFullResponse {
 
     private Integer id;
-    private String userName;
+    private String username;
     private EventResponse event;
     private Integer ticketQuantity;
     private Timestamp orderedAt;
 
     public OrderFullResponse(OrderResponse orderResponse, EventResponse eventResponse) {
         id = orderResponse.getId();
-        userName = orderResponse.getUserName();
+        username = orderResponse.getUsername();
         ticketQuantity = orderResponse.getTicketQuantity();
         orderedAt = orderResponse.getOrderedAt();
         event = eventResponse;

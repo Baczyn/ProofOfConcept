@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
 >
 <h:head>
-    <title> Order Page </title>
+    <title> Reservations </title>
+    <link rel="stylesheet" href="table.css"/>
 </h:head>
-<h:body>
-    <h1>Order Details</h1>
-    <h:dataTable value="#{bookingBean.doGetOrders()}" var="order">
+<h:body onload="setActiveClass()">
+
+    <ui:insert name="header">
+        <ui:include src="header.xhtml"/>
+    </ui:insert>
+
+    <div class="center">
+        <h1>Your Reservations</h1>
+    </div>
+
+    <h:dataTable class="table" value="#{bookingBean.doGetOrders()}" var="order">
         <h:column>
             <f:facet name="header">Order Id</f:facet>
             #{order.id}
@@ -31,10 +40,30 @@
         </h:column>
         <h:column rendered="#{not empty role}">
             <h:form>
-                <h:commandButton  value="Cancel" type="submit"
+                <h:commandButton value="Cancel" type="submit"
                                  action="#{bookingBean.doRemoveOrder(order.id)}">
                 </h:commandButton>
             </h:form>
+        </h:column>
+    </h:dataTable>
+
+
+    <div class="center">
+        <h1>Tasks in progress</h1>
+    </div>
+
+    <h:dataTable  class="table" value="#{bookingBean.doGetTasks()}" var="task">
+        <h:column>
+            <f:facet name="header">Order Id</f:facet>
+            #{task.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{task.title}
+        </h:column>
+        <h:column>
+            <f:facet name="header">State</f:facet>
+            #{task.taskState}
         </h:column>
     </h:dataTable>
 
@@ -43,10 +72,14 @@
         // Force safari to refresh the page
         // if a cached copy was loaded
         // from the browser back-forward cache.
-        window.onpageshow = function (e) {
+        window.onpageshow = function(e) {
             if (e.persisted) {
                 window.location.reload();
             }
+        }
+
+        function setActiveClass(){
+            document.getElementById("reserv-nav-id").classList.add('active');
         }
     </script>
 </h:body>

@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-  xmlns:jsf="http://xmlns.jcp.org/jsf"
-  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-<title> Security Login Page </title>
+      xmlns:h="http://java.sun.com/jsf/html"
+>
+<title> Security Register Page </title>
+<h:head>
+    <link rel="stylesheet" href="form.css"/>
+</h:head>
 <body>
-  <h2>Register Login</h2>
-  <h:form id="registerform">
-    <p>
-      Username
-      <h:inputText id="username" value="#{loginBean.username}" required="true"/>
-    </p>
-    <p>
-      Password
-      <h:inputSecret id="password" value="#{loginBean.password}" required="true"/>
-    </p>
-    <p>
-      <h:commandButton value="Register" type="submit"
-        action="#{loginBean.doRegister()}">
-      </h:commandButton>
-        <br /> <br /> <input
-        type="reset" value="Reset" />
-    </p>
-  </h:form>
-  <script type="text/javascript">
+<div class="center">
+    <h2>Register Form</h2>
+    <h:form id="registerform">
+        <p><h:outputLabel for="username">Username:</h:outputLabel></p>
+        <p><h:inputText id="username" value="#{loginBean.username}" required="true"/></p>
+        <p><h:outputLabel for="password">Password:</h:outputLabel></p>
+        <p><h:inputSecret id="password" value="#{loginBean.password}" required="true"/></p>
+        <h:commandButton value="Register" type="submit"
+                         action="#{loginBean.doRegister()}">
+        </h:commandButton>
+
+    </h:form>
+</div>
+<script type="text/javascript">
     // Force safari to refresh the page
     // if a cached copy was loaded
     // from the browser back-forward cache.
-    window.onpageshow = function(e) {
-      if (e.persisted) {
-        window.location.reload();
-      }
+    window.onpageshow = function (e) {
+        if (e.persisted) {
+            window.location.reload();
+        }
     }
-  </script>
+</script>
 </body>
 </html>

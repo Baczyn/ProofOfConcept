@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns="http://www.w3.org/1999/xhtml">
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-    <title> Event Page </title>
+    <link rel="stylesheet" href="table.css"/>
+    <link rel="stylesheet" href="eventDetails.css"/>
+    <title> Event Details Page </title>
 </h:head>
 <f:event listener="#{reviewBean.initConversation()}" type="preRenderView"/>
 <f:event listener="#{bookingBean.initConversation()}" type="preRenderView"/>
 <h:body>
-    <h1>Event Details</h1>
-    <h:dataTable value="#{eventBean.doGetById()}" var="event">
+
+    <ui:insert name="header">
+        <ui:include src="header.xhtml"/>
+    </ui:insert>
+
+    <div class="center">
+        <h1>Event Details</h1>
+    </div>
+
+    <h:dataTable class="table" value="#{eventBean.doGetById()}" var="event">
         <h:column>
             <f:facet name="header">Title</f:facet>
             #{event.title}
@@ -32,71 +42,90 @@
         </h:column>
     </h:dataTable>
 
-    <h:form rendered="#{role eq 'admin'}" id="ticket-form">
-        <h:outputLabel for="noOfTicket">Available Tickets:</h:outputLabel>
-        <h:inputText id="noOfTicket" value="#{bookingBean.availableNoOfTickets}" required="true"
-                     requiredMessage="No. of tickets is required"/><br/>
-        <h:commandButton id="submit-button" value="Submit"
-                         action="#{bookingBean.doUpdateNoOfTickets()}"/>
-    </h:form>
+    <div class="eventDetails">
+        <div class="center" >
 
-    <h:form rendered="#{not empty role}">
-        <p>Book event:</p>
-        <p>
-            Number Of Tickets
-            <input type="number" name="ticketQuantity" required="true" value="1"/>
-        </p>
-        <p>
-            <h:commandButton rendered="#{bookingBean.availableNoOfTickets ge 1}" value="Book" type="submit"
-                             action="#{bookingBean.doCreateOrder( param['ticketQuantity'])}">
-            </h:commandButton>
-            <h:outputText rendered="#{bookingBean.availableNoOfTickets eq 0}">Sale unavaible.</h:outputText>
-        </p>
-    </h:form>
-    <h:form rendered="#{not empty role}">
-        <p>
-            Content:
-            <h:inputText id="comment-form" value="#{reviewBean.content}" required="true"/>
-            <h:commandButton value="Comment" type="submit"
-                             action="#{reviewBean.commentEvent()}">
-            </h:commandButton>
-        </p>
-    </h:form>
-    <h:form>
-        <p>
-            Likes: #{reviewBean.getAllLikesForEventCount()}
-            <h:commandButton rendered="#{not empty role and reviewBean.isLiked() eq false}" value="Like it"
-                             type="submit"
-                             action="#{reviewBean.likeEvent()}">
-            </h:commandButton>
-            <h:commandButton rendered="#{not empty role and reviewBean.isLiked() eq true}" value="Unlike it"
-                             type="submit"
-                             action="#{reviewBean.unlikeEvent()}">
-            </h:commandButton>
-        </p>
-    </h:form>
+            <h:messages rendered="#{not empty role}">
+                <h1>Booking</h1>
+            </h:messages>
 
-    <h1>Comments</h1>
-    <h:dataTable value="#{reviewBean.getAllCommentsForEvent()}" var="comment">
-        <h:column>
-            <f:facet name="header">User</f:facet>
-            #{comment.username}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Content</f:facet>
-            #{comment.content}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Date</f:facet>
-            #{comment.date}
-        </h:column>
-        <h:column rendered="#{user eq comment.username}">
-            <h:form>
-                <h:commandButton value="Uncomment" type="submit"
-                                 action="#{reviewBean.uncommentEvent(comment.commentId)}"/>
+            <h:form rendered="#{role eq 'admin'}" id="ticket-form">
+                <p><h:outputLabel for="noOfTicket">Available Tickets:</h:outputLabel></p>
+                <h:inputText id="noOfTicket" value="#{bookingBean.availableNoOfTickets}" required="true"
+                             requiredMessage="No. of tickets is required"/><br/>
+                <h:commandButton id="submit-button" value="Submit"
+                                 action="#{bookingBean.doUpdateNoOfTickets()}"/>
             </h:form>
-        </h:column>
-    </h:dataTable>
+
+
+            <h:form rendered="#{not empty role}">
+                <p>
+                    Number Of Tickets
+                    <input type="number" name="ticketQuantity" required="true" value="1"/>
+                </p>
+
+                <h:commandButton rendered="#{bookingBean.availableNoOfTickets ge 1}" value="Book" type="submit"
+                                 action="#{bookingBean.doCreateOrder( param['ticketQuantity'])}">
+                </h:commandButton>
+
+                <h:commandButton rendered="#{bookingBean.availableNoOfTickets ge 1}" value="Book asynchronously"
+                                 type="submit"
+                                 action="#{bookingBean.doCreateOrderAsync( param['ticketQuantity'])}">
+                </h:commandButton>
+
+                <p><h:outputText rendered="#{bookingBean.availableNoOfTickets eq 0}">Sale unavaible.</h:outputText></p>
+
+            </h:form>
+        </div>
+
+
+        <div class="center">
+            <h1>Reviews</h1>
+            <p>Likes: #{reviewBean.getAllLikesForEventCount()}</p>
+            <h:form>
+                <h:commandButton rendered="#{not empty role and reviewBean.isLiked() eq false}" value="Like it"
+                                 type="submit"
+                                 action="#{reviewBean.likeEvent()}">
+                </h:commandButton>
+                <h:commandButton rendered="#{not empty role and reviewBean.isLiked() eq true}" value="Unlike it"
+                                 type="submit"
+                                 action="#{reviewBean.unlikeEvent()}">
+                </h:commandButton>
+            </h:form>
+
+            <h:form rendered="#{not empty role}">
+                <p>
+                    <h:outputLabel for="comment-form">Content:</h:outputLabel>
+                    <h:inputText id="comment-form" value="#{reviewBean.content}" required="true"/>
+                    <h:commandButton value="Comment" type="submit"
+                                     action="#{reviewBean.commentEvent()}">
+                    </h:commandButton>
+                </p>
+            </h:form>
+        </div>
+
+
+        <h:dataTable class="table" value="#{reviewBean.getAllCommentsForEvent()}" var="comment">
+            <h:column>
+                <f:facet name="header">User</f:facet>
+                #{comment.username}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Content</f:facet>
+                #{comment.content}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Date</f:facet>
+                #{comment.date}
+            </h:column>
+            <h:column rendered="#{user eq comment.username}">
+                <h:form>
+                    <h:commandButton value="Uncomment" type="submit"
+                                     action="#{reviewBean.uncommentEvent(comment.commentId)}"/>
+                </h:form>
+            </h:column>
+        </h:dataTable>
+    </div>
 
     <script type="text/javascript">
         // Force safari to refresh the page
