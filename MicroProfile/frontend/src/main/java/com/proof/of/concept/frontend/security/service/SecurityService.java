@@ -2,18 +2,33 @@ package com.proof.of.concept.frontend.security.service;
 
 import com.proof.of.concept.frontend.security.exception.UserAlreadyExistException;
 import com.proof.of.concept.frontend.security.exception.UserNotFoundException;
+import com.proof.of.concept.frontend.security.model.Role;
 import com.proof.of.concept.frontend.security.model.User;
 import com.proof.of.concept.frontend.security.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
+import java.util.Set;
+
 @ApplicationScoped
 @Named
 public class SecurityService {
 
+    @PostConstruct
+    void createAdmin(){
+        User user = User.builder()
+                .withPasswordHash(passwordHash)
+                .withPassword("admin")
+                .withName("administrator")
+                .withRoles(Set.of(Role.ADMIN))
+                .build();
+
+        repository.create(user);
+    }
     @Inject
     private UserRepository repository;
 

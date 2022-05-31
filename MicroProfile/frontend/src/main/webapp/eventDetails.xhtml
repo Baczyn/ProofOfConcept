@@ -118,7 +118,7 @@
                 <f:facet name="header">Date</f:facet>
                 #{comment.date}
             </h:column>
-            <h:column rendered="#{user eq comment.username}">
+            <h:column rendered="#{user eq comment.username or role eq 'admin'}">
                 <h:form>
                     <h:commandButton value="Uncomment" type="submit"
                                      action="#{reviewBean.uncommentEvent(comment.commentId)}"/>

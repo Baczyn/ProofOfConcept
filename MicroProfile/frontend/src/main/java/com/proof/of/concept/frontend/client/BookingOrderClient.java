@@ -9,7 +9,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import java.util.concurrent.CompletionStage;
 
-@RegisterRestClient(baseUri = "http://localhost:9081/booking-app")
+@RegisterRestClient(configKey = "bookingClient",baseUri = "http://booking-app:9081/booking-app")
 @Path("/order")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)

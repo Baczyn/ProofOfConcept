@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(baseUri = "http://localhost:9080/event-app")
+@RegisterRestClient(configKey = "eventsClient",baseUri = "http://events-app:9080/event-app")
 @Path("/event")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)

@@ -68,10 +68,15 @@ public class BookingBean implements Serializable {
 
     private Integer doGetNoOfTickets() {
         String jwt = SessionUtils.getJwtToken();
-        try {
-            Response response = bookingEventClient.getById(jwt, this.eventId);
-            return response.readEntity(BookingEvent.class).getNumberOfTickets();
-        } catch (Exception e) {
+        if (!this.eventId.isEmpty()) {
+            try {
+                Response response = bookingEventClient.getById(jwt, this.eventId);
+                return response.readEntity(BookingEvent.class).getNumberOfTickets();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+        else{
             return 0;
         }
     }
@@ -103,6 +108,7 @@ public class BookingBean implements Serializable {
     }
 
     public String doCreateOrderAsync(String ticketQuantity) {
+
         String jwt = SessionUtils.getJwtToken();
         String username = SessionUtils.getCurrentUserName();
 
@@ -127,17 +133,17 @@ public class BookingBean implements Serializable {
         }
 
         System.out.println("client 4");
-        bookingOrderClient.createAsync(jwt,orderRequest).whenCompleteAsync(consumer);
+        bookingOrderClient.createAsync(jwt, orderRequest).whenCompleteAsync(consumer);
         System.out.println("client 5");
 
         return "eventDetails.jsf?faces-redirect=true&id=" + this.eventId;
     }
 
-    public List<TaskResponse> doGetTasks(){
+    public List<TaskResponse> doGetTasks() {
         String jwt = SessionUtils.getJwtToken();
         String username = SessionUtils.getCurrentUserName();
 
-        JsonArray array = bookingOrderClient.getTasksByUsername(jwt,username).readEntity(JsonArray.class);
+        JsonArray array = bookingOrderClient.getTasksByUsername(jwt, username).readEntity(JsonArray.class);
 
         List<TaskResponse> list = new ArrayList<>();
         for (JsonValue item : array) {
