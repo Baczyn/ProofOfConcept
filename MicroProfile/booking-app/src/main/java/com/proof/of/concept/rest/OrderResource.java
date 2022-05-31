@@ -8,7 +8,10 @@ import com.proof.of.concept.model.Order;
 import com.proof.of.concept.model.OrderRequest;
 import com.proof.of.concept.model.TaskResponse;
 import com.proof.of.concept.repository.OrderRepository;
+import jakarta.annotation.Resource;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.concurrent.Asynchronous;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,8 +25,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @RequestScoped
 @Path("/order")
@@ -31,13 +32,12 @@ import java.util.concurrent.Executors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResource {
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(10);
-
     @Inject
     OrderRepository orderRepository;
-
     @Inject
     AsyncTasksStateHolder asyncTasksStateHolder;
+    @Resource
+    private ManagedExecutorService executor;
 
     @GET
     @APIResponses({
@@ -160,18 +160,51 @@ public class OrderResource {
             try {
                 task.updateState(TaskState.IN_PROGRESS);
                 orderRepository.create(order);
-                httpResponse = Response.status(Response.Status.CREATED).entity(order).build();
                 task.updateState(TaskState.DONE);
+                httpResponse = Response.status(Response.Status.CREATED).entity(order).build();
+
             } catch (EntityNotFoundException e) {
                 task.updateState(TaskState.FAILED);
-                System.out.println(e.getMessage());
                 httpResponse = Response.status(Response.Status.NOT_FOUND).build();
+
             } catch (NumberOfTicketException e) {
-                System.out.println(e.getMessage());
+                task.updateState(TaskState.FAILED);
                 httpResponse = Response.status(Response.Status.BAD_REQUEST).build();
             }
+
             response.resume(httpResponse);
         });
+    }
+
+
+    @POST
+    @Path("v2/async")
+    @Asynchronous
+    @RolesAllowed({"ADMIN", "USER"})
+    public void createAsyncV2(OrderRequest orderRequest, @Suspended AsyncResponse response) {
+
+        Order order = new Order(orderRequest);
+
+        Task task = asyncTasksStateHolder.initTask(order);
+
+        Response httpResponse;
+
+        try {
+            task.updateState(TaskState.IN_PROGRESS);
+            orderRepository.create(order);
+            task.updateState(TaskState.DONE);
+            httpResponse = Response.status(Response.Status.CREATED).entity(order).build();
+
+        } catch (EntityNotFoundException e) {
+            task.updateState(TaskState.FAILED);
+            httpResponse = Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (NumberOfTicketException e) {
+            task.updateState(TaskState.FAILED);
+            httpResponse = Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        response.resume(httpResponse);
     }
 
     @GET
