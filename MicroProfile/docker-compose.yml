@@ -1,0 +1,196 @@
+version: '3.7'
+services:
+
+  review-db:
+    image: neo4j:latest
+    restart: unless-stopped
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    hostname: review-db
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./conf:/conf
+      - ./data:/data
+      - ./import:/import
+      - ./logs:/logs
+      - ./plugins:/plugins
+    container_name: review-db
+    networks:
+      - app_network
+
+  events-db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: events
+    hostname: events-db
+    ports:
+      - 27017:27017
+    volumes:
+      - ./initScripts/events-db-init.js:/docker-entrypoint-initdb.d/events-db-init.js:ro
+      - /var/lib/events-db:/data/db
+    container_name: events-db
+    networks:
+      - app_network
+
+  users-db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: users
+    hostname: users-db       
+    ports:
+      - 27018:27017
+    volumes:
+      - ./initScripts/users-db-init.js:/docker-entrypoint-initdb.d/users-db-init.js:ro
+      - /var/lib/users-db:/data/db
+    container_name: users-db
+    networks:
+      - app_network
+
+  booking-db:
+    image: onjin/alpine-postgres
+    restart: always
+    environment: 
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=booking_db
+    hostname: booking-db
+    ports: 
+      - "8001:5432"
+    volumes: 
+      - ./initScripts/booking-db-init.sql:/docker-entrypoint-initdb.d/booking-db-init.sql 
+    container_name: booking-db
+    networks:
+      - app_network
+
+    
+  events-app:
+    build:
+      context: ./events-app
+    image: events-app
+    hostname: events-app
+    links:
+      - jaeger
+    ports:
+      - "9080:9080"
+      - "9440:9440"
+    networks:
+      - app_network
+    environment:
+      MONGO_HOSTNAME: events-db
+      MONGO_PORT: 27017
+      MONGO_DBNAME: events
+      MONGO_USER: admin
+      MONGO_PASS: password
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_REPORTER_LOG_SPANS: "true"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+    depends_on:
+      events-db:
+        condition: service_started
+    container_name: events-app
+
+  booking-app:
+    build:
+      context: ./booking-app
+    image: booking-app
+    hostname: booking-app
+    ports:
+      - "9081:9081"
+      - "9441:9441"
+    networks:
+      - app_network
+    environment:
+      POSTGRES_HOST: booking-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB_NAME: booking_db
+      POSTGRES_USER_NAME: postgres
+      POSTGRES_PASSWORD: postgres
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_REPORTER_LOG_SPANS: "true"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+    depends_on:
+      booking-db:
+        condition: service_started
+    container_name: booking-app
+
+  review-app:
+    build:
+      context: ./review-app
+    image: review-app
+    hostname: review-app
+    ports:
+      - "9083:9083"
+      - "9443:9443"
+    networks:
+      - app_network
+    environment:
+      NEO4J_DATABASEURI: neo4j://review-db:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASS: password
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_REPORTER_LOG_SPANS: "true"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+    depends_on:
+      review-db:
+        condition: service_started
+    container_name: review-app
+
+  frontend:
+    build:
+      context: ./frontend
+    image: frontend
+    hostname: frontend
+    ports:
+      - "9082:9082"
+      - "9442:9442"
+    networks:
+      - app_network
+    environment:
+      MONGO_HOSTNAME: users-db
+      MONGO_PORT: 27017
+      MONGO_DBNAME: users
+      MONGO_USER: admin
+      MONGO_PASS: password
+    depends_on:
+      users-db:
+        condition: service_started
+    container_name: frontend
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+    networks:
+      - app_network
+    container_name: jaeger
+
+  prometheus:
+    image: prom/prometheus
+    networks:
+      - app_network
+    ports:
+      - 9000:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+    container_name: prometheus
+
+volumes:
+  prometheus-data:
+
+networks:
+  app_network:
+    driver: bridge

@@ -1,0 +1,21 @@
+--- 
+global: 
+  external_labels: 
+    monitor: codelab-monitor
+  scrape_interval: 15s
+scrape_configs: 
+  - 
+    job_name: prometheus
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true  # This is the key
+    scrape_interval: 5s
+    basic_auth:
+      username: admin
+      password: adminpwd
+    static_configs: 
+      - 
+        targets: 
+          - "events-app:9440"
+          - "booking-app:9441"
+          - "review-app:9443"
