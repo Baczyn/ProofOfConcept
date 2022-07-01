@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-management-config
-data:
-  postgres-management-url:  postgres-management-service
-  postgres-management-pass: postgres
-  postgres-management-user: postgres

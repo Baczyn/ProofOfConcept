@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-cati-config
-data:
-  postgres-cati-url: postgres-cati-service
-  postgres-cati-pass: postgres
-  postgres-cati-user: postgres
